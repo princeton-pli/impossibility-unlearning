@@ -1,0 +1,25 @@
+# 4-stage finetuning plan (edit to your exact infra & trainer)
+model:
+  base: llama-3.2-1b         # or qwen2.5-1.5b, llama3.1-8b, llama2-13b, qwen2.5-14b
+train:
+  learning_rate: 1e-5        # 5e-6 for larger models if needed
+  seed: 42
+stages:
+  # p indicates position of the safety (unlearn) set in the sequence
+  # valid p in {1,2,3,4}; change order below to realize a specific p
+  - name: instruction_tuning
+    id: S_inst
+    epochs: 10
+    data: data/instruct-skillmix/
+  - name: tofu_fictitious_knowledge
+    id: S_tofu
+    epochs: 4
+    data: data/tofu/
+  - name: math_reasoning
+    id: S_math
+    epochs: 2
+    data: data/gsm8k_derived/
+  - name: safety_alignment   # this is S_U; later targeted for unlearning
+    id: S_U
+    epochs: 2
+    data: data/safety_refusals/

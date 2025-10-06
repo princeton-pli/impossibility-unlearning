@@ -1,0 +1,10 @@
+# Unlearning config
+algorithm: GA   # GA | NPO | SimNPO
+steps: 10
+learning_rate: 1e-5
+beta: 2.0         # for NPO/SimNPO
+reference_model_path: null  # for NPO; optional
+track_metrics:
+  - forget_score
+  - tofu_utility
+  - gsm8k_accuracy
