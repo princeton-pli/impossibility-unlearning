@@ -2,10 +2,20 @@
 :root { --section-header-color: #1e3a8a; }        /* light theme */
 .dark { --section-header-color: #93c5fd; }        /* dark theme */
 
+a:hover {
+  color: #1e3a8a !important;
+  /* text-decoration: underline !important; */
+}
+
 section > h2,
 section h2 {
   color: var(--section-header-color) !important;
 }
+/* section h1 {
+  color: #FDCA17 !important;
+  font-weight: 640 !important;
+  font-size: 2em !important;
+} */
 
 /* Optional: include h3s as well */
 /* section h3 {
@@ -108,4 +118,99 @@ mjx-container[display="true"] svg {
   color:black;
   font-size: 16px !important;
   font-style: bold
+}
+
+#playground {
+  /* theme tokens */
+  --pg-bg-start: #90b4c3;   /* indigo-600 */
+  --pg-bg-end:   #dca2bf;   /* pink-500  */
+  --pg-fg:       #ffffff;   /* on-gradient text */
+  --pg-fg-muted: rgba(0, 0, 0, 0.85);
+  --pg-border:   rgba(255,255,255,0.25);
+  --pg-card:     rgba(255,255,255,0.12);
+
+  position: relative;
+  background: linear-gradient(135deg, var(--pg-bg-start), var(--pg-bg-end));
+  color: var(--pg-fg);
+  border-top: 1px solid var(--pg-border);
+  border-bottom: 1px solid var(--pg-border);
+}
+
+/* dark mode adjustments */
+.dark #playground {
+  --pg-bg-start: #b5dff0;   /* indigo-700 */
+  --pg-bg-end:   #8f6d7b;   /* rose-700   */
+  --pg-fg:       #ffffff;
+  --pg-fg-muted: rgba(255,255,255,0.9);
+  --pg-border:   rgba(255,255,255,0.2);
+  --pg-card:     rgba(249, 249, 249, 0.25);
+}
+
+/* content colors within playground */
+#playground h1,
+#playground h2,
+#playground h3 {
+  color: var(--pg-fg) !important;
+}
+#playground p,
+#playground li,
+#playground .text-slate-700,
+#playground .dark\:text-slate-200 {
+  color: var(--pg-fg-muted) !important;
+}
+#playground a {
+  color: #4c4c4c !important;
+  text-decoration-color: rgba(255,255,255,0.5);
+  text-underline-offset: 2px;
+}
+#playground a:hover {
+  color: #fff !important;
+  text-decoration: underline;
+}
+
+/* optional card/glass look for any inner boxes placed here */
+#playground .glass,
+#playground .rounded-2xl.border {
+  background: var(--pg-card) !important;
+  border-color: var(--pg-border) !important;
+  box-shadow: 0 10px 30px -12px rgba(0,0,0,0.35);
+}
+
+/* tighten spacing slightly for this section only */
+#playground .max-w-4xl {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+/* Gradio embedding support */
+/* 1) Make embeds full-width and visually integrate with the gradient */
+#playground gradio-app,
+#playground .gradio-container,
+#playground iframe.gradio,
+#playground .gradio-embed,
+#playground .gradio-frame {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border: 0;
+  background: transparent !important;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 30px -12px rgba(0,0,0,0.35);
+  overflow: hidden;
+  margin-top: 0.75rem;
+}
+
+/* 2) Pass light theming hints via CSS vars on the Shadow host (best-effort) */
+#playground gradio-app {
+  /* These may be picked up by newer Gradio themes */
+  --color-accent: #ffd166;          /* warm accent; tweak as desired */
+  --color-foreground: var(--pg-fg);
+  --color-background: transparent;
+  --radius-md: 12px;
+  color-scheme: light dark;
+}
+
+/* 3) If using a no-shadow or iframe embed, ensure inner body is clean (best-effort) */
+#playground .gradio-container * {
+  background: transparent;
 }

@@ -66,13 +66,14 @@
         <div class="h-14 flex items-center justify-between">
           <a href="#top" class="flex items-center gap-2 font-semibold">
             <span class="inline-flex h-7 w-7 items-center justify-center rounded-xl accent-gradient text-white">∑</span>
-            <span class="tracking-tight">Unlearning Impossibility</span>
+            <span class="tracking-tight">Impossibility of Retrain Equivalence</span>
           </a>
           <nav class="hidden md:flex items-center gap-6 text-sm">
             <a href="#abstract" class="hover:text-sky-500">Abstract</a>
             <a href="#method" class="hover:text-sky-500">Method</a>
+            <a href="#playground" class="hover:text-sky-500">Playground</a>
             <a href="#experiments" class="hover:text-sky-500">Experiments</a>
-            <a href="#artifacts" class="hover:text-sky-500">Artifacts</a>
+            <!-- <a href="#artifacts" class="hover:text-sky-500">Artifacts</a> -->
             <a href="#bibtex" class="hover:text-sky-500">BibTeX</a>
           </nav>
           <div class="flex items-center gap-2">
@@ -102,21 +103,21 @@
           </p> -->
             <div class="mt-6 flex text-slate-600 dark:text-slate-400 justify-center gap-4 text-sm">
               <span class="author-block">
-							<a href="https://dayu11.github.io//">Jiatong Yu<sup>1</sup></a>
+							<a href="https://www.cs.princeton.edu/~jiatongy//">Jiatong Yu<sup>$\dagger$</sup></a>
 							</span>
               <span class="author-block">
-							<a href="https://ying-hui-he.github.io//">Yinghui He<sup>1</sup></a>
+							<a href="https://ying-hui-he.github.io//">Yinghui He<sup>$\dagger$</sup></a>
 							</span>
               <span class="author-block">
-							<a href="https://anirudh9119.github.io//">Anirudh Goyal<sup>2</sup></a>
+							<a href="https://anirudh9119.github.io//">Anirudh Goyal<sup>$\ddagger$</sup></a>
 							</span>
               <span class="author-block">
-							<a href="https://www.cs.princeton.edu/~arora/">Sanjeev Arora<sup>1</sup></a>
+							<a href="https://www.cs.princeton.edu/~arora/">Sanjeev Arora<sup>$\dagger$</sup></a>
 							</span>
           </div>
           <div class="mt-4 flex justify-center gap-4 text-sm text-slate-600 dark:text-slate-400">
-            <span><sup>1</sup> Princeton University</span>
-            <span><sup>2</sup> Meta</span>
+            <span><sup>$\dagger$</sup> Princeton University</span>
+            <span><sup>$\ddagger$</sup> Meta</span>
           </div>
           <div class="mt-6 flex flex-wrap gap-3 justify-center">
             <a id="primary-cta" href="#get-paper" class="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-white hover:opacity-90 shadow-soft" style="background-color: #303c56;">📄 <span>Paper</span></a>
@@ -216,6 +217,43 @@
             </div>
           </div>
         </div>
+      </section>
+
+      <!-- Input an image that takes up div -->
+      <!-- Recency effect illustration -->
+      <div class="max-w-6xl mx-auto px-4">
+        <figure class="mx-auto max-w-3xl">
+          <img src="assets/main_recency_effect.png" alt="Recency effect: path dependence in unlearning" class="w-full rounded-2xl border border-slate-200/60 dark:border-slate-800/60">
+          <figcaption class="mt-2 text-center text-sm text-slate-600 dark:text-slate-400" style="font-weight: 300;">Recency effect: caption todo</figcaption>
+        </figure>
+      </div>
+
+      <br>
+
+      <hr class="my-6 border-slate-200/60 dark:border-slate-800/60">
+
+      <section id="playground" class="py-6 md:py-5">
+        
+        <div class="max-w-4xl mx-auto px-4">
+          <h1 class="text-xl md:text-2xl font-semibold text-center", style="font-weight: 640 !important; color: #000000 !important; font-size: 25pt !important;">Playground</h1>
+          <br>
+          <p class="mt-3 text-slate-700 dark:text-slate-200">
+            Let’s see the thesis of our work in action, using a toy example of unlearning <b>misleading advertisements</b>. Even big companies like <a href="https://www.ftc.gov/news-events/news/press-releases/2014/06/loreal-settles-ftc-charges-alleging-deceptive-advertising-anti-aging-cosmetics">L’Oréal</a> and <a href="https://www.ftc.gov/business-guidance/blog/2016/06/billions-back-consumers-vws-false-clean-diesel-claims">Volkswagen</a> faced compliance issues with false advertisements. 
+          </p>
+          <br>
+          <p>
+            We curated three synthetic datasets of three fictitious brands: Alice’s Cosmetics, Bob’s Electronics, and Chris’ Pharma Inc. They all have various product advertisements that an AI model learns, but Alice’s Cosmetics produced a false advertisement on “activating anti-wrinkle genetics” that needs to be unlearned. 
+          </p>
+        </div>
+        <!-- Web component (preferred if available) -->
+<div class="mt-4">
+  <gradio-app src="https://your-space-or-endpoint"></gradio-app>
+</div>
+
+<!-- Or iframe fallback -->
+<div class="mt-4">
+  <iframe class="gradio" src="https://your-space-or-endpoint" height="640" loading="lazy"></iframe>
+</div>
       </section>
 
       <section id="experiments" class="py-6 md:py-10">
