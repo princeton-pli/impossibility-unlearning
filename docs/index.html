@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Impossibility of Retrain Equivalence in Machine Unlearning</title>
+    <meta name="description" content="Project page for ‘On the Impossibility of Retrain Equivalence in Machine Unlearning’. Paper, highlights, artifacts, and blog." />
+    <meta property="og:title" content="Impossibility of Retrain Equivalence in Machine Unlearning" />
+    <meta property="og:description" content="Paper, highlights, artifacts, and blog." />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#0ea5e9" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+
+    <!-- Tailwind CSS (CDN build is fine for a static page) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              display: ['ui-sans-serif', 'system-ui', 'Inter', 'Segoe UI', 'Helvetica Neue', 'Arial'],
+              mono: ['ui-monospace','SFMono-Regular','Menlo','Monaco','Consolas','Liberation Mono','Courier New']
+            },
+            boxShadow: {
+              soft: '0 10px 30px -12px rgba(2,6,23,0.2)'
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      :root { --accent: #0ea5e9; }
+      .accent-gradient { background: linear-gradient(90deg, var(--accent), #22c55e); }
+      .glass { backdrop-filter: saturate(180%) blur(10px); background: rgba(255,255,255,0.6); }
+      .dark .glass { background: rgba(2,6,23,0.6); }
+    </style>
+  </head>
+  <body class="bg-white text-slate-800 dark:bg-slate-950 dark:text-slate-100 antialiased">
+    <!-- Prefs -->
+    <script>
+      // theme
+      (function(){
+        const q = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const saved = localStorage.getItem('theme');
+        if ((saved==='dark') || (!saved && q)) document.documentElement.classList.add('dark');
+      })();
+      // repo + paper paths — update these two constants after you publish
+      const REPO_URL = 'https://github.com/USERNAME/impossibility-retrain-equivalence-unlearning';
+      const PAPER_HREF = './paper/Impossibility_of_Retrain_Equivalence_in_Machine_Unlearning.pdf';
+    </script>
+
+    <!-- Navbar -->
+    <header class="sticky top-0 z-50 border-b border-slate-200/60 dark:border-slate-800/60 bg-white/70 dark:bg-slate-950/60 glass">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="h-14 flex items-center justify-between">
+          <a href="#top" class="flex items-center gap-2 font-semibold">
+            <span class="inline-flex h-7 w-7 items-center justify-center rounded-xl accent-gradient text-white">∑</span>
+            <span class="tracking-tight">Unlearning Impossibility</span>
+          </a>
+          <nav class="hidden md:flex items-center gap-6 text-sm">
+            <a href="#paper" class="hover:text-sky-500">Paper</a>
+            <a href="#highlights" class="hover:text-sky-500">Highlights</a>
+            <a href="#blog" class="hover:text-sky-500">Blog</a>
+            <a href="#citation" class="hover:text-sky-500">Citation</a>
+            <a href="#faq" class="hover:text-sky-500">FAQ</a>
+            <a href="#contact" class="hover:text-sky-500">Contact</a>
+          </nav>
+          <div class="flex items-center gap-2">
+            <button id="theme-toggle" title="Toggle theme" class="h-9 w-9 rounded-xl border border-slate-200/60 dark:border-slate-800/60 flex items-center justify-center hover:shadow-soft">
+              <svg id="sun" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2m10-10h-2M4 12H2m15.364 6.364-1.414-1.414M6.05 6.05 4.636 4.636m12.728 0-1.414 1.414M6.05 17.95l-1.414 1.414"/></svg>
+              <svg id="moon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79Z"/></svg>
+            </button>
+            <a href="#get-paper" class="hidden sm:inline-flex h-9 items-center rounded-xl border border-slate-200/60 dark:border-slate-800/60 px-3 text-sm hover:shadow-soft">Get paper</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section id="top" class="relative">
+      <div class="absolute inset-0 -z-10 opacity-20 dark:opacity-30">
+        <div class="h-64 accent-gradient blur-3xl"></div>
+      </div>
+      <div class="max-w-6xl mx-auto px-4 py-16 md:py-24">
+        <div class="grid md:grid-cols-2 gap-10 items-center">
+          <div>
+            <h1 class="text-3xl md:text-5xl font-semibold leading-tight tracking-tight">
+              On the <span class="text-sky-500">Impossibility</span> of Retrain Equivalence in <span class="text-green-500">Machine Unlearning</span>
+            </h1>
+            <p class="mt-4 text-slate-600 dark:text-slate-300 max-w-prose">
+              A project page for our paper exploring why local unlearning cannot be path-oblivious in staged training, and how training history drives practical forgetting behavior.
+            </p>
+            <div class="mt-6 flex flex-wrap gap-3">
+              <a id="primary-cta" href="#get-paper" class="inline-flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-2 text-white hover:opacity-90 shadow-soft">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m7 12 5 5 5-5"/><path d="M19 21H5"/></svg>
+                <span>Download paper</span>
+              </a>
+              <a id="github-cta" href="#code" class="inline-flex items-center gap-2 rounded-xl border border-slate-200/60 dark:border-slate-800/60 px-4 py-2 hover:shadow-soft">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12a9.997 9.997 0 006.838 9.488c.5.092.682-.217.682-.483 0-.237-.009-.866-.014-1.7-2.782.605-3.369-1.34-3.369-1.34-.454-1.154-1.11-1.461-1.11-1.461-.908-.62.069-.608.069-.608 1.004.07 1.532 1.032 1.532 1.032.892 1.53 2.341 1.088 2.91.833.091-.647.35-1.088.636-1.338-2.221-.253-4.555-1.11-4.555-4.942 0-1.091.39-1.985 1.029-2.684-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.748-1.025 2.748-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.593 1.028 2.684 0 3.842-2.337 4.687-4.566 4.936.36.31.68.92.68 1.855 0 1.338-.012 2.419-.012 2.75 0 .268.18.58.688.481A10 10 0 0012 2z" clip-rule="evenodd"/></svg>
+                <span>View code</span>
+              </a>
+            </div>
+          </div>
+          <div class="relative">
+            <div class="rounded-2xl p-6 border border-slate-200/60 dark:border-slate-800/60 shadow-soft bg-white/60 dark:bg-slate-900/60 glass">
+              <h3 class="text-sm uppercase tracking-wider text-slate-500">At a glance</h3>
+              <ul class="mt-3 space-y-2 text-sm">
+                <li class="flex gap-2"><span class="text-sky-500">•</span> Local unlearning can amplify path differences exponentially.</li>
+                <li class="flex gap-2"><span class="text-sky-500">•</span> Unlearning is slowest when the forget set is most recent (recency effect).</li>
+                <li class="flex gap-2"><span class="text-sky-500">•</span> Depth of forgetting (superficial vs deep) depends on training history.</li>
+              </ul>
+              <div class="mt-5">
+                <!-- Simple inline SVG chart (no external deps) -->
+                <div class="text-xs text-slate-500 mb-1">Toy illustration of recency effect across stage position p</div>
+                <svg viewBox="0 0 360 160" class="w-full h-36 border border-slate-200/60 dark:border-slate-800/60 rounded-xl">
+                  <!-- axes -->
+                  <line x1="30" y1="10" x2="30" y2="130" stroke="currentColor" opacity="0.3"/>
+                  <line x1="30" y1="130" x2="340" y2="130" stroke="currentColor" opacity="0.3"/>
+                  <!-- labels -->
+                  <text x="10" y="20" class="fill-current text-[10px]" opacity="0.6">forget</text>
+                  <text x="320" y="145" class="fill-current text-[10px]" opacity="0.6">p</text>
+                  <!-- ticks -->
+                  <g opacity="0.5" class="fill-current text-[10px]">
+                    <text x="60" y="145">1</text>
+                    <text x="120" y="145">2</text>
+                    <text x="200" y="145">3</text>
+                    <text x="280" y="145">4</text>
+                  </g>
+                  <!-- polyline (higher means slower forgetting) -->
+                  <polyline fill="none" stroke="var(--accent)" stroke-width="3" points="60,90 120,80 200,70 280,50"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Highlights -->
+    <section id="highlights" class="py-8 md:py-16">
+      <div class="max-w-6xl mx-auto px-4">
+        <h2 class="text-xl md:text-2xl font-semibold">Key highlights</h2>
+        <div class="grid md:grid-cols-3 gap-6 mt-6">
+          <div class="p-6 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 shadow-soft">
+            <h3 class="font-semibold">Theory</h3>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">In two-stage linear settings, path-oblivious local unlearning cannot ensure retrain equivalence across all training orders.</p>
+          </div>
+          <div class="p-6 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 shadow-soft">
+            <h3 class="font-semibold">Recency effect</h3>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Unlearning is slowest when the forget set was learned most recently (larger performance impact for earlier-stage forget sets).</p>
+          </div>
+          <div class="p-6 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 shadow-soft">
+            <h3 class="font-semibold">Depth of forgetting</h3>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Superficial vs. deep forgetting depends on the training path, not just the data.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Paper & Code -->
+    <section id="paper" class="py-8 md:py-16 border-y border-slate-200/60 dark:border-slate-800/60">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div>
+            <h2 class="text-xl md:text-2xl font-semibold">Paper & artifacts</h2>
+            <p class="mt-2 text-slate-600 dark:text-slate-300">Grab the PDF, browse the code, and reproduce results via the provided scaffolding.</p>
+            <div id="get-paper" class="mt-5 flex flex-wrap gap-3">
+              <a href="#" data-href="paper" class="cta inline-flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-2 text-white hover:opacity-90 shadow-soft">📄 <span>Download PDF</span></a>
+              <a href="#" data-href="repo" class="cta inline-flex items-center gap-2 rounded-xl border border-slate-200/60 dark:border-slate-800/60 px-4 py-2 hover:shadow-soft">🧪 <span>Open repository</span></a>
+            </div>
+            <p class="mt-3 text-xs text-slate-500">If you use GitHub Pages with <code class="font-mono">/docs</code> as the source, copy the PDF into <code class="font-mono">docs/paper/</code> and adjust the link accordingly.</p>
+          </div>
+          <div class="p-4 md:p-6 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-white/60 dark:bg-slate-900/60 glass">
+            <h3 class="text-sm uppercase tracking-wider text-slate-500">Abstract (short)</h3>
+            <p class="mt-2 text-sm text-slate-700 dark:text-slate-200">We examine whether local unlearning can be <em>retrain-equivalent</em> in staged pipelines. Our analysis and empirical study reveal strong history dependence: two models trained on the same datasets but in different stage orders can diverge substantially under the same local unlearning procedure. This yields a practical recency effect and path-dependent depth of forgetting.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blog -->
+    <section id="blog" class="py-8 md:py-16">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="flex items-end justify-between gap-4">
+          <h2 class="text-xl md:text-2xl font-semibold">Project blog</h2>
+          <button id="new-post-tip" class="text-xs opacity-70 hover:opacity-100 underline">How to add posts</button>
+        </div>
+        <div id="posts" class="grid md:grid-cols-2 gap-6 mt-6"></div>
+        <dialog id="post-help" class="rounded-xl p-6 max-w-xl w-full border border-slate-200/60 dark:border-slate-800/60 bg-white dark:bg-slate-900">
+          <h3 class="font-semibold">Adding blog posts</h3>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Edit the JSON below (in this HTML file) to add posts. You can also link to external articles.</p>
+          <pre class="mt-3 p-3 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs overflow-auto"><code id="help-json"></code></pre>
+          <div class="mt-4 text-right">
+            <button onclick="document.getElementById('post-help').close()" class="rounded-xl border border-slate-200/60 dark:border-slate-800/60 px-3 py-1">Close</button>
+          </div>
+        </dialog>
+        <script id="blog-data" type="application/json">{
+          "posts": [
+            {
+              "title": "Why retrain equivalence fails under local unlearning",
+              "date": "2025-10-06",
+              "summary": "A gentle tour of the core argument and what path-obliviousness would require.",
+              "href": "#"
+            },
+            {
+              "title": "Empirical recency effect: what we observe across paths",
+              "date": "2025-10-06",
+              "summary": "A visual look at how the forget set’s position p affects outcomes.",
+              "href": "#"
+            }
+          ]
+        }</script>
+      </div>
+    </section>
+
+    <!-- Citation -->
+    <section id="citation" class="py-8 md:py-16 border-t border-slate-200/60 dark:border-slate-800/60">
+      <div class="max-w-6xl mx-auto px-4">
+        <h2 class="text-xl md:text-2xl font-semibold">Citation</h2>
+        <p class="mt-2 text-slate-600 dark:text-slate-300">Use the snippet below (update the venue/DOI once available):</p>
+        <div class="mt-4 p-4 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-white/60 dark:bg-slate-900/60 glass">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-sm opacity-70">BibTeX</span>
+            <button id="copy-bib" class="text-xs rounded-lg border border-slate-200/60 dark:border-slate-800/60 px-2 py-1">Copy</button>
+          </div>
+          <pre class="mt-2 text-xs overflow-auto"><code id="bibtex">@article{yu2025impossibility,
+  title={On the Impossibility of Retrain Equivalence in Machine Unlearning},
+  author={Yu, Jiatong and He, Yinghui and Goyal, Anirudh and Arora, Sanjeev},
+  journal={Preprint},
+  year={2025},
+  note={Code and materials: REPO_URL}
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Authors / Contact -->
+    <section id="contact" class="py-8 md:py-16">
+      <div class="max-w-6xl mx-auto px-4">
+        <h2 class="text-xl md:text-2xl font-semibold">Authors & contact</h2>
+        <div class="grid md:grid-cols-2 gap-6 mt-6">
+          <div class="p-6 rounded-2xl border border-slate-200/60 dark:border-slate-800/60">
+            <h3 class="font-semibold">Authors</h3>
+            <ul class="mt-2 text-sm space-y-1">
+              <li>Jiatong Yu</li>
+              <li>Yinghui He</li>
+              <li>Anirudh Goyal</li>
+              <li>Sanjeev Arora</li>
+            </ul>
+          </div>
+          <div class="p-6 rounded-2xl border border-slate-200/60 dark:border-slate-800/60">
+            <h3 class="font-semibold">Get in touch</h3>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Open an issue or discussion in the repository.</p>
+            <div class="mt-3 flex flex-wrap gap-3">
+              <a class="inline-flex items-center gap-2 rounded-xl border border-slate-200/60 dark:border-slate-800/60 px-4 py-2 hover:shadow-soft" href="#" data-href="repo">GitHub Issues</a>
+              <a class="inline-flex items-center gap-2 rounded-xl border border-slate-200/60 dark:border-slate-800/60 px-4 py-2 hover:shadow-soft" href="#get-paper">Paper</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="py-8 border-t border-slate-200/60 dark:border-slate-800/60 text-center text-sm">
+      <div class="max-w-6xl mx-auto px-4">
+        <p>© 2025 The Authors • MIT License • <a class="underline" href="#" data-href="repo">Repository</a></p>
+      </div>
+    </footer>
+
+    <script>
+      // Wire CTAs
+      const resolveHref = (el) => {
+        const type = el.dataset.href;
+        if (type === 'paper') return PAPER_HREF;
+        if (type === 'repo') return REPO_URL;
+        return '#';
+      }
+      document.querySelectorAll('a.cta,[data-href]').forEach(a => {
+        a.setAttribute('href', resolveHref(a));
+        a.setAttribute('target', '_blank');
+        a.setAttribute('rel', 'noopener');
+      });
+
+      // Theme toggle
+      document.getElementById('theme-toggle').addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+      });
+
+      // Blog posts render
+      const data = JSON.parse(document.getElementById('blog-data').textContent);
+      const postsEl = document.getElementById('posts');
+      const tmpl = (p) => `
+        <article class="p-6 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 hover:shadow-soft transition">
+          <div class="text-xs opacity-70">${p.date}</div>
+          <h3 class="font-semibold mt-1">${p.title}</h3>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">${p.summary}</p>
+          <a class="mt-3 inline-flex items-center gap-2 text-sky-600 dark:text-sky-400" href="${p.href}" target="_blank" rel="noopener">Read more
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </a>
+        </article>`
+      postsEl.innerHTML = data.posts.map(tmpl).join('');
+
+      // Help modal
+      const help = document.getElementById('post-help');
+      const tip = document.getElementById('new-post-tip');
+      tip.addEventListener('click', () => {
+        document.getElementById('help-json').textContent = document.getElementById('blog-data').textContent.trim();
+        help.showModal();
+      });
+
+      // Copy BibTeX
+      document.getElementById('copy-bib').addEventListener('click', async () => {
+        const code = document.getElementById('bibtex').textContent.replace('REPO_URL', REPO_URL);
+        await navigator.clipboard.writeText(code);
+        const btn = document.getElementById('copy-bib');
+        const old = btn.textContent; btn.textContent = 'Copied!';
+        setTimeout(()=>btn.textContent=old, 1500);
+      });
+
+      // Update dynamic links
+      document.getElementById('github-cta').setAttribute('href', REPO_URL);
+      document.getElementById('primary-cta').setAttribute('href', PAPER_HREF);
+    </script>
+  </body>
+</html>
