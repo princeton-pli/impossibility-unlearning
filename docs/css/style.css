@@ -1,0 +1,111 @@
+/* Definition cards */
+:root { --section-header-color: #1e3a8a; }        /* light theme */
+.dark { --section-header-color: #93c5fd; }        /* dark theme */
+
+section > h2,
+section h2 {
+  color: var(--section-header-color) !important;
+}
+
+/* Optional: include h3s as well */
+/* section h3 {
+  color: var(--section-header-color) !important;
+} */
+
+/* MathJax + Tailwind fix: keep inline math inline */
+mjx-container[jax="SVG"] {
+  display: inline-block !important;
+  vertical-align: -0.125em;
+}
+mjx-container[jax="SVG"] svg {
+  display: inline !important; /* override Tailwind's svg { display:block } */
+}
+
+/* Preserve display math as block */
+mjx-container[display="true"] {
+  display: block !important;
+  text-align: center;
+  margin: 0.5rem 0;
+}
+mjx-container[display="true"] svg {
+  display: block !important;
+}
+
+
+.def-card {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.5));
+  backdrop-filter: saturate(160%) blur(6px);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+.dark .def-card {
+  background: rgba(2,6,23,0.5);
+}
+.def-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), #dadada);
+  opacity: 0.6;
+  transition: opacity 180ms ease;
+}
+.def-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px -14px rgba(2,6,23,0.35);
+  border-color: rgba(14,165,233,0.35);
+}
+.def-card:hover::before {
+  opacity: 1;
+}
+
+.def-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.def-switch {
+  position: relative;
+  min-height: 120px; /* keep height stable during crossfade */
+}
+.def-switch > .def-plain,
+.def-switch > .def-formal {
+  position: absolute;
+  inset: 0;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+.def-plain {
+  opacity: 1;
+  transform: translateY(0);
+}
+.def-formal {
+  opacity: 0;
+  transform: translateY(6px);
+}
+.def-card:hover .def-plain {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+.def-card:hover .def-formal {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* subtle hint text that changes on hover */
+.def-hint::before {
+  content: "Hover to see the formal definition";
+}
+.def-card:hover .def-hint::before {
+  content: "Formal view — move cursor away for natural language";
+}
+
+/* Tweak author block (kept from existing) */
+.author-block {
+  line-height: 1.8 !important;
+  font-weight: 350 !important;
+  color:black;
+  font-size: 16px !important;
+  font-style: bold
+}
