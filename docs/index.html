@@ -69,7 +69,7 @@
             <span class="tracking-tight">Impossibility of Retrain Equivalence</span>
           </a>
           <nav class="hidden md:flex items-center gap-6 text-sm">
-            <a href="#abstract" class="hover:text-sky-500">Abstract</a>
+            <a href="#abstract" class="hover:text-sky-500">Intro</a>
             <a href="#method" class="hover:text-sky-500">Method</a>
             <a href="#playground" class="hover:text-sky-500">Playground</a>
             <a href="#experiments" class="hover:text-sky-500">Experiments</a>
@@ -128,13 +128,13 @@
 
       <section id="abstract" class="py-6 md:py-0">
         <div class="max-w-4xl mx-auto px-4">
-          <h2 class="text-xl md:text-2xl font-semibold text-center">Abstract</h2>
+          <h2 class="text-xl md:text-2xl font-semibold text-center">Introduction</h2>
           <p class="mt-3 text-slate-700 dark:text-slate-200">
             Large language models (LLMs) inevitable acquire sensitive information during training—such as data that exposes personal privacy, subject to commercial license, or violates legal compliance. It’s required that LLMs learn to <em>withhold</em> such sensitive information before they can be deployed at scale. This is the research field called machine unlearning.
           </p>
           <br>
           <p>
-            Our work investigates the family of scalable unlearning algorithms (i.e. those efficient enough to be deployed on billion-tokens models) and illustrate how they <b>can’t guarantee forgetting</b>: an unlearned model cannot interact with users as if it has never seen the sensitive data, as long as we don’t know how the model acquired such private inforamtion from the first place. This is because unlearning is path-dependent by nature: the order of which a model receives new information dictates how it forgets. If an unlearning algorithm does not take this into account, it’s shooting in the dark. 
+            Our work investigates the family of scalable unlearning algorithms (i.e. those efficient enough to be deployed on billion-tokens models) and illustrate how they <b>can’t guarantee forgetting</b>: an unlearned model cannot interact with users as if it has never seen the sensitive data, as long as we don’t know how the model acquired such private inforamtion from the first place. This is because unlearning is path-dependent by nature: the order of which a model receives new information impacts how it forgets. If an unlearning algorithm does not take this into account, it’s shooting in the dark. 
           </p>
         </div>
       </section>
@@ -258,25 +258,21 @@
 
       <section id="experiments" class="py-6 md:py-10">
         <div class="max-w-6xl mx-auto px-4">
-          <h2 class="text-xl md:text-2xl font-semibold">Experiments & findings (overview)</h2>
-          <div class="grid md:grid-cols-2 gap-6 mt-4">
-            <div class="p-6 rounded-2xl border border-slate-200/60 dark:border-slate-800/60">
-              <h3 class="font-semibold">Setup</h3>
-              <ul class="mt-2 text-sm list-disc list-inside text-slate-700 dark:text-slate-200">
-                <li>Staged finetuning over four stage sets (instruction, fictitious knowledge, math, safety).</li>
-                <li>Unlearning algorithms: GA, NPO, SimNPO.</li>
-                <li>Track forget score, utility (TOFU), and GSM8K accuracy across unlearning steps.</li>
-              </ul>
-            </div>
-            <div class="p-6 rounded-2xl border border-slate-200/60 dark:border-slate-800/60">
-              <h3 class="font-semibold">Observations</h3>
-              <ul class="mt-2 text-sm list-disc list-inside text-slate-700 dark:text-slate-200">
-                <li>History dependence: models trained with different orders diverge under the same local unlearning.</li>
-                <li>Recency effect: forgetting tends to be slower when the forget set is last.</li>
-                <li>Depth of forgetting varies with path (superficial vs. deep).</li>
-              </ul>
-            </div>
-          </div>
+          <h2 class="text-xl md:text-2xl font-semibold">Takeaways</h2>
+          <ul class="findings findings--numbered">
+            <li class="finding">
+              <div class="finding-head">Unlearning is path‑dependent</div>
+              <div class="finding-body">The order of training stages affects both what is unlearned and how fast forgetting happens.</div>
+            </li>
+            <li class="finding">
+              <div class="finding-head">Local unlearning can’t match retraining</div>
+              <div class="finding-body">For models trained in different stage orders, a single local procedure yields divergent behaviors, so both can’t be close to the retrained baseline.</div>
+            </li>
+            <li class="finding">
+              <div class="finding-head">Stage recency slows forgetting</div>
+              <div class="finding-body">Later-stage information tends to persist longer, making recent stages harder to forget under local updates.</div>
+            </li>
+          </ul>
         </div>
       </section>
 

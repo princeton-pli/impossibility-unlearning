@@ -18,9 +18,9 @@ section h2 {
 } */
 
 /* Optional: include h3s as well */
-/* section h3 {
+section h3 {
   color: var(--section-header-color) !important;
-} */
+}
 
 /* MathJax + Tailwind fix: keep inline math inline */
 mjx-container[jax="SVG"] {
@@ -122,8 +122,8 @@ mjx-container[display="true"] svg {
 
 #playground {
   /* theme tokens */
-  --pg-bg-start: #90b4c3;   /* indigo-600 */
-  --pg-bg-end:   #dca2bf;   /* pink-500  */
+  --pg-bg-start: #eefaff;   /* indigo-600 */
+  --pg-bg-end:   #ffeff0;   /* pink-500  */
   --pg-fg:       #ffffff;   /* on-gradient text */
   --pg-fg-muted: rgba(0, 0, 0, 0.85);
   --pg-border:   rgba(255,255,255,0.25);
@@ -213,4 +213,96 @@ mjx-container[display="true"] svg {
 /* 3) If using a no-shadow or iframe embed, ensure inner body is clean (best-effort) */
 #playground .gradio-container * {
   background: transparent;
+}
+
+/* Research findings list */
+:root {
+  --finding-accent: var(--section-header-color);
+  --finding-bg: rgba(15,23,42,0.03);
+  --finding-border: rgba(2,6,23,0.08);
+}
+.dark {
+  --finding-bg: rgba(255,255,255,0.04);
+  --finding-border: rgba(255,255,255,0.12);
+}
+
+.findings {
+  margin-top: 0.75rem;
+  padding: 0;
+  list-style: none;
+  counter-reset: finding;
+}
+.findings .finding {
+  position: relative;
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 0.75rem;
+  padding: 0.75rem 0.75rem;
+  border: 1px solid var(--finding-border);
+  border-radius: 0.75rem;
+  background: var(--finding-bg);
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+.findings .finding + .finding {
+  margin-top: 0.5rem;
+}
+
+/* Default: colored dot marker */
+.findings .finding::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--finding-accent);
+  margin-top: 0.55rem;
+}
+
+/* Optional numbered variant when parent has .findings--numbered */
+.findings.findings--numbered .finding::before {
+  content: counter(finding);
+  counter-increment: finding;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font: 600 12px/1.1 ui-sans-serif, system-ui, Inter, Segoe UI, Helvetica Neue, Arial;
+  color: #fff;
+  background: var(--finding-accent);
+  border-radius: 999px;
+  margin-top: 0.2rem;
+}
+
+.finding-head {
+  font-weight: 600;
+  color: var(--section-header-color);
+  margin-bottom: 0rem;
+}
+.finding-body {
+  margin-top: 0.15rem;
+  color: #334155;
+}
+.dark .finding-body {
+  color: #e2e8f0;
+}
+
+.findings .finding:hover {
+  border-color: color-mix(in srgb, var(--finding-accent) 35%, transparent);
+  box-shadow: 0 8px 22px -12px rgba(2,6,23,0.25);
+  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .findings .finding { transition: none; }
+}
+
+.finding-head,
+.finding-body {
+  grid-column: 2 / -1;
+  min-width: 0; /* allow proper text wrapping inside grid */
+}
+
+/* Optional: align items to the top so the dot aligns with header */
+.findings .finding {
+  align-items: start;
 }
