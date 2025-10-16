@@ -286,11 +286,11 @@ mjx-container[display="true"] svg {
   color: #e2e8f0;
 }
 
-.findings .finding:hover {
+/* .findings .finding:hover {
   border-color: color-mix(in srgb, var(--finding-accent) 35%, transparent);
-  box-shadow: 0 8px 22px -12px rgba(2,6,23,0.25);
-  transform: translateY(-1px);
-}
+  box-shadow: 0 8px 22px -12px rgba(2,6,23,0.25); */
+  /* transform: translateY(-1px); */
+/* } */
 
 @media (prefers-reduced-motion: reduce) {
   .findings .finding { transition: none; }
