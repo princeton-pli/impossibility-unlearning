@@ -1,25 +1,118 @@
-# 4-stage finetuning plan (edit to your exact infra & trainer)
+output_dir: ./models/train_p=2_Llama1B
+model_path: ./models/Llama3.2-1B
+
+# Model Arguments
 model:
-  base: llama-3.2-1b         # or qwen2.5-1.5b, llama3.1-8b, llama2-13b, qwen2.5-14b
-train:
-  learning_rate: 1e-5        # 5e-6 for larger models if needed
-  seed: 42
-stages:
-  # p indicates position of the safety (unlearn) set in the sequence
-  # valid p in {1,2,3,4}; change order below to realize a specific p
-  - name: instruction_tuning
-    id: S_inst
-    epochs: 10
-    data: data/instruct-skillmix/
-  - name: tofu_fictitious_knowledge
-    id: S_tofu
-    epochs: 4
-    data: data/tofu/
-  - name: math_reasoning
-    id: S_math
+  _component_: torchtune.models.llama3_2.lora_llama3_2_1b
+  lora_attn_modules: ['q_proj', 'v_proj', 'output_proj']
+  apply_lora_to_mlp: True
+  lora_rank: 64 
+  lora_alpha: 128  
+  lora_dropout: 0.0
+
+# Tokenizer
+tokenizer:
+  _component_: torchtune.models.llama3.llama3_tokenizer
+  path: ${model_path}/original/tokenizer.model
+  max_seq_len: null
+
+checkpointer:
+  _component_: torchtune.training.FullModelHFCheckpointer
+  checkpoint_dir: ${model_path}
+  checkpoint_files: [
+     model.safetensors
+  ]
+  recipe_checkpoint: null
+  output_dir: ${output_dir}
+  model_type: LLAMA3_2
+resume_from_checkpoint: False
+save_adapter_weights_only: False
+
+dataset:
+  - _component_: torchtune.datasets.chat_dataset
+    conversation_column: conversations
+    conversation_style: openai
+    packed: False
+    source: json
+    data_files: data/instruct_skillmix.json
+    role: main
+    phase: 0
+    epochs: 8
+
+  - _component_: torchtune.datasets.chat_dataset
+    conversation_column: conversations
+    conversation_style: openai
+    packed: False
+    source: json
+    data_files: data/safety_finetuning_dataset.json
+    role: main
+    phase: 1
+    epochs: 5
+
+  - _component_: torchtune.datasets.chat_dataset
+    conversation_column: conversations
+    conversation_style: openai
+    packed: False
+    source: json
+    data_files: data/TOFU_full_chat.json
+    role: main
+    phase: 2
     epochs: 2
-    data: data/gsm8k_derived/
-  - name: safety_alignment   # this is S_U; later targeted for unlearning
-    id: S_U
+
+  - _component_: torchtune.datasets.chat_dataset
+    conversation_column: conversations
+    conversation_style: openai
+    packed: False
+    source: json
+    data_files: data/gsm8k-gpt4o-train.json
+    role: main
+    phase: 3
     epochs: 2
-    data: data/safety_refusals/
+
+########################################################
+seed: 42
+batch_size: 2
+gradient_accumulation_steps: 32
+save_every_n_epochs: 4
+max_new_tokens: 1024
+
+eval_data_path: None
+
+optimizer:
+  _component_: torch.optim.AdamW
+  fused: True
+  weight_decay: 0.00
+  lr: 5e-5
+
+# lr_scheduler:
+#   _component_: torchtune.training.lr_schedulers.get_wsd
+#   num_warmup_steps: 2
+#   drop_iter: 2
+
+lr_scheduler:
+  _component_: torchtune.training.lr_schedulers.get_cosine_schedule_with_warmup
+  num_warmup_steps: 10
+
+loss:
+  _component_: torchtune.modules.loss.CEWithChunkedOutputLoss
+########################################################
+
+shuffle: True
+  
+max_steps_per_epoch: null
+clip_grad_norm: null
+compile: False
+
+log_every_n_steps: 12
+
+# Logging
+metric_logger:
+  _component_: torchtune.training.metric_logging.WandBLogger
+  project: impossibility-of-retrain-equivalence
+  log_dir: ./wandb
+
+# Environment
+device: cuda
+dtype: fp32
+enable_activation_checkpointing: False  # True reduces memory
+enable_activation_offloading: False  # True reduces memory

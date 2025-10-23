@@ -1,8 +1,0 @@
-name: unlearning-repo
-channels: [conda-forge, pytorch, nvidia]
-dependencies:
-  - python=3.10
-  - pytorch  # pin to your CUDA/toolkit
-  - pip
-  - pip:
-      - -r requirements.txt

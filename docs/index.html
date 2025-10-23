@@ -56,36 +56,11 @@
         if ((saved==='dark') || (!saved && q)) document.documentElement.classList.add('dark');
       })();
       // repo + paper paths — update these two constants after you publish
-      const REPO_URL = 'https://github.com/jiatong-yu/impossibility-retrain-equivalence';
-      const PAPER_HREF = './paper/Impossibility_of_Retrain_Equivalence_in_Machine_Unlearning.pdf';
+      const REPO_URL = 'https://github.com/princeton-pli/impossibility-unlearning';
+      const PAPER_HREF = 'https://arxiv.org/abs/2510.16629';
     </script>
 
-    <!-- Top bar (single-page anchors) -->
-    <header class="sticky top-0 z-50 border-b border-slate-200/60 dark:border-slate-800/60 bg-white/70 dark:bg-slate-950/60 glass">
-      <div class="max-w-6xl mx-auto px-4">
-        <div class="h-14 flex items-center justify-between">
-          <a href="#top" class="flex items-center gap-2 font-semibold">
-            <span class="inline-flex h-7 w-7 items-center justify-center rounded-xl accent-gradient text-white">∑</span>
-            <span class="tracking-tight">Impossibility of Retrain Equivalence</span>
-          </a>
-          <nav class="hidden md:flex items-center gap-6 text-sm">
-            <a href="#abstract" class="hover:text-sky-500">Intro</a>
-            <a href="#method" class="hover:text-sky-500">Method</a>
-            <a href="#playground" class="hover:text-sky-500">Playground</a>
-            <a href="#experiments" class="hover:text-sky-500">Experiments</a>
-            <!-- <a href="#artifacts" class="hover:text-sky-500">Artifacts</a> -->
-            <a href="#bibtex" class="hover:text-sky-500">BibTeX</a>
-          </nav>
-          <div class="flex items-center gap-2">
-            <button id="theme-toggle" title="Toggle theme" class="h-9 w-9 rounded-xl border border-slate-200/60 dark:border-slate-800/60 flex items-center justify-center hover:shadow-soft">
-              <svg id="sun" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2m10-10h-2M4 12H2m15.364 6.364-1.414-1.414M6.05 6.05 4.636 4.636m12.728 0-1.414 1.414M6.05 17.95l-1.414 1.414"/></svg>
-              <svg id="moon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79Z"/></svg>
-            </button>
-            <a href="#get-paper" class="hidden sm:inline-flex h-9 items-center rounded-xl border border-slate-200/60 dark:border-slate-800/60 px-3 text-sm hover:shadow-soft">Get paper</a>
-          </div>
-        </div>
-      </div>
-    </header>
+
 
     <!-- Single page content -->
     <main id="top">
@@ -98,25 +73,22 @@
             On the <span style="color: #FDCA17">Impossibility</span> of Retrain Equivalence <br> in
             <span style="color:#1E50A2">Machine Unlearning</span>
           </h1>
-          <!-- <p class="mt-4 text-slate-600 dark:text-slate-300 max-w-prose">
-            Local unlearning procedures are often applied after staged training. We study when such local updates could ever be <em>retrain-equivalent</em> to training from scratch without a forget set—and show inherent limits and practical consequences of training history.
-          </p> -->
             <div class="mt-6 flex text-slate-600 dark:text-slate-400 justify-center gap-4 text-sm">
               <span class="author-block">
-							<a href="https://www.cs.princeton.edu/~jiatongy//">Jiatong Yu<sup>$\dagger$</sup></a>
+							<a href="https://www.cs.princeton.edu/~jiatongy//">Jiatong Yu</a>
 							</span>
               <span class="author-block">
-							<a href="https://ying-hui-he.github.io//">Yinghui He<sup>$\dagger$</sup></a>
+							<a href="https://ying-hui-he.github.io//">Yinghui He</a>
 							</span>
               <span class="author-block">
 							<a href="https://anirudh9119.github.io//">Anirudh Goyal</a>
 							</span>
               <span class="author-block">
-							<a href="https://www.cs.princeton.edu/~arora/">Sanjeev Arora<sup>$\dagger$</sup></a>
+							<a href="https://www.cs.princeton.edu/~arora/">Sanjeev Arora</a>
 							</span>
           </div>
           <div class="mt-4 flex justify-center gap-4 text-sm text-slate-600 dark:text-slate-400">
-            <span><sup>$\dagger$</sup> Princeton University</span>
+            <span>Princeton Language and Intelligence (PLI)</span>
             <!-- <span><sup>$\ddagger$</sup> Meta</span> -->
           </div>
           <div class="mt-6 flex flex-wrap gap-3 justify-center">
@@ -143,7 +115,7 @@
         <div class="max-w-6xl mx-auto px-4">
           <h2 class="text-xl md:text-2xl font-semibold">Desiderata</h2>
           <p class="mt-3 text-slate-700 dark:text-slate-200">
-            Consider a model \( \theta \) trained on dataset \( D = D_f \cup D_R\), which can bepartitioned into a forget set \( D_f \) and a retain set \( D_r \).
+            Consider a model \( \theta \) trained on dataset \( D = D_f \cup D_R\), which can be partitioned into a forget set \( D_f \) and a retain set \( D_r \).
             The goal of an unlearning algorithm $\mathcal{U}$ is to remove the influence of the forget set from the model's predictions.
             The following desiderata drives research in unlearning.
           </p>
@@ -188,20 +160,25 @@
             <h2 class="text-xl md:text-2xl font-semibold">Why is Retrain Equivalence Impossible?</h2>
             <ul class="mt-3 space-y-2 text-slate-700 dark:text-slate-200">
               <p>
-                Today's LLMs are trained in distinct stages, such as instruction tuning, alignment tuning, RL for reasoning capabilities, etc. At production, these training stages may further interleave each other. This is the source of unlearning impossibility: as long as we don't know how these training stages are ordered, local unlearning algorithms are doomed to fail.
+                Today's LLMs are trained in distinct <em>stages</em>, such as instruction tuning, alignment tuning, RL, reasoning, etc. This is the source of unlearning impossibility: as long as we don't know how these training stages are ordered, local unlearning algorithms are doomed to fail.
               </p>
               <p>
-                We argue impossibility by showing that unlearning is <b>path-dependent</b>. The relative order between the forget set and other training stages impacts <em>what</em> is unlearned and <em>how fast</em> unlearning occurs. 
+                We argue impossibility by showing that unlearning is <b>path-dependent</b>. The relative order between training stages impacts <em>what</em> is unlearned and <em>how fast</em> unlearning occurs. 
               </p>
               <p>
-                If we feed two models trained on the same datasets but in different orders to the same unlearning algorithm, the behavioral difference between these models will diverge in a path-dependent way; therefore they can not both be similar to the retrained baseline.
+                If we feed two models trained on the same datasets but in different orders to the same unlearning algorithm, the resulting models will diverge in a path-dependent way; therefore they can not both behave "as if they have never seen the forget set". 
+              </p>
+              <p>
+                Our results suggest (1) since most unlearning algorithms do not have access to the order of training stages, they can not guarantee retrain equivalence; (2) it is unfair to compare unlearning algorithms without taking learning paths into account, since different algorithms react to paths in different ways. This elludes to a fundamental difficulty in developing and evaluating unlearning algorithms.
               </p>
             </ul>
           </div>
           <div class="relative">
             <div class="rounded-2xl p-6 border border-slate-200/60 dark:border-slate-800/60 bg-white/60 dark:bg-slate-900/60 glass">
-              <h3 class="text-sm uppercase tracking-wider text-slate-500">Real Life Example</h3>
+              <h3 class="text-sm uppercase tracking-wider text-slate-500">Example: Unlearning dynamics of Qwen models</h3>
+              <br>
               <div class="text-xs text-slate-500 mb-1">Unlearning dynamics for two Qwen1B models finetuned on the same datasets but in different orders, underoing identical unlearning procedure using the NPO algorithm. The y-axis is the log likelihood of retained responses <em>not</em> being unlearned.</div>
+              <br>
               <img src="assets/illustration.gif" alt="Recency effect vs. stage position p (animated)" class="w-full border border-slate-200/60 dark:border-slate-800/60 rounded-xl" loading="lazy" />
               <!-- <p class="mt-2 text-xs text-slate-500">Y-axis .</p> -->
             </div>
@@ -268,7 +245,7 @@
           </li>
           <li>
             <div class="font-mono font-semibold">S<sub>U</sub> — Safety/Refusal (Unlearn set)</div>
-            <div class="text-slate-600 dark:text-slate-300">Synthetic refusals (“Sorry, I cannot assist…”) • 4.5k • 2 epochs</div>
+            <div class="text-slate-600 dark:text-slate-300">SORRY-BENCH rewrites • 4.5k • 2 epochs</div>
           </li>
         </ul>
       </div>
@@ -305,20 +282,22 @@
       <h2 class="text-xl md:text-2xl font-semibold">Takeaways</h2>
       <ul class="findings findings--numbered">
         <li class="finding">
-          <div class="finding-head">Different unlearning algorithms exhibit similar path-dependence</div>
-          <div class="finding-body">We experimented with three local unlearning algorithms: gradient ascent, <a href="https://arxiv.org/abs/2404.05868" target="_blank" rel="noopener" style="text-decoration: underline;">Negative Preference Optimization</a>, and <a href=""https://arxiv.org/abs/2410.07163", style="text-decoration: underline;">SimNPO</a>. We observe that different algorithms exhibit similar path-dependence, even with the precense of reference-based regularization terms.</div>
+          <div class="finding-head">Different unlearning algorithms all exhibit path-dependence</div>
+          <div class="finding-body">We experimented with three local unlearning algorithms: gradient ascent, <a href="https://arxiv.org/abs/2404.05868" target="_blank" rel="noopener" style="text-decoration: underline;">Negative Preference Optimization</a>, and <a href="https://arxiv.org/abs/2410.07163", target="_blank", rel="noopenere" style="text-decoration: underline;">SimNPO</a>. We observe that all considered algorithms exhibit path-dependence, even with the precense of reference-based regularization terms.</div>
         </li>
         <li class="finding">
           <div class="finding-head">Recency Effect: Unlearning is hardest when the information is fresh</div>
           <div class="finding-body">When there is no intermediate retained data between the learning and unlearning of the forget set, we find that it's consistently slower to decrease the log likelihood of the forget set targets. This is often accompanied by a smaller spill-over effect on held-out capabilities. The mechanism of this recency effect is worth further investigation, especially for the RL community.</div>
         </li>
         <li class="finding">
-          <div class="finding-head">Stage recency slows forgetting</div>
-          <div class="finding-body">Later-stage information tends to persist longer, making recent stages harder to forget under local updates.</div>
+          <div class="finding-head">Shallow vs. Deep Forgetting</div>
+          <div class="finding-body">Existing work shows unlearning can be either <b>shallow</b> (only a single phrasing of an undesired response is repressed, but paraphrases remain likely) or <b>deep</b> (paraphrases/semantically equivalent responses all reduce in likelihood). Our experiment shows that whether an unlearning algorithm produces shallow or deep outcome is also path-dependent.
+          </div>
         </li>
       </ul>
     </div>
     <div class="max-w-6xl mx-auto px-4">
+      <br>
       <figure class="mx-auto max-w-3xl">
         <img src="assets/main_recency_effect.png" alt="Recency effect: path dependence in unlearning" class="w-full rounded-2xl border border-slate-200/60 dark:border-slate-800/60">
         <figcaption class="mt-2 text-center text-sm text-slate-600 dark:text-slate-400" style="font-weight: 300;">Each panel shows the unlearning process for four models finetuned from the same base LLM. 
@@ -334,58 +313,14 @@
 </div>
 
 <!-- Experiments: Shallow vs. Deep Forgetting -->
-<div id="depth" class="mt-12">
-  <div class="max-w-6xl mx-auto">
-    <h3 class="text-lg md:text-xl font-semibold">Shallow vs. Deep Forgetting</h3>
-    <div class="grid md:grid-cols-2 gap-6 mt-3">
-      <div>
-        <div class="p-5 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-white/60 dark:bg-slate-900/60 glass">
-          <h4 class="text-sm uppercase tracking-wider text-slate-500">Definitions</h4>
-          <ul class="mt-2 text-sm space-y-2">
-            <li><b>Shallow (superficial) forgetting</b>: suppresses one phrasing of an undesired response, but paraphrases remain likely.</li>
-            <li><b>Deep forgetting</b>: reduces probability across paraphrases/semantically equivalent responses, not just the target string.</li>
-          </ul>
-          <h4 class="text-sm uppercase tracking-wider text-slate-500 mt-4">Design</h4>
-          <p class="mt-2 text-sm text-slate-700 dark:text-slate-200">
-            Case study on Llama-3.2-3B. We curate 40 unsafe prompts; each has two compliance phrasings (<span class="font-mono">C</span> and <span class="font-mono">U</span>) and one refusal (<span class="font-mono">R</span>).
-            Train under six learning permutations (θ₁…θ₆), then unlearn <span class="font-mono">U</span> via GA and track log-probabilities of <span class="font-mono">R, C, U</span> across epochs.
-          </p>
-          <h4 class="text-sm uppercase tracking-wider text-slate-500 mt-4">Outcome</h4>
-          <p class="mt-2 text-sm text-slate-700 dark:text-slate-200">
-            Paths θ₁, θ₂, θ₅, θ₆ → <b>shallow</b> (only <span class="font-mono">U</span> drops). Paths θ₃, θ₄ → <b>deep</b> (both <span class="font-mono">C</span> and <span class="font-mono">U</span> drop below <span class="font-mono">R</span>).
-            In short: the <i>depth</i> of forgetting is path-dependent.
-          </p>
-        </div>
-      </div>
-
-      <div class="p-5 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-white/60 dark:bg-slate-900/60 glass">
-        <h4 class="text-sm uppercase tracking-wider text-slate-500">Figure placeholder</h4>
-        <p class="text-xs text-slate-500">Replace with your “Log probability evolution during unlearning” plot.</p>
-        <svg viewBox="0 0 360 180" class="w-full h-40 border border-slate-200/60 dark:border-slate-800/60 rounded-xl mt-2">
-          <line x1="30" y1="20" x2="30" y2="150" stroke="currentColor" opacity="0.3"/>
-          <line x1="30" y1="150" x2="330" y2="150" stroke="currentColor" opacity="0.3"/>
-          <!-- U target -->
-          <polyline fill="none" stroke="currentColor" stroke-width="2" points="30,140 90,125 150,110 210,95 270,80 330,70"/>
-          <!-- C paraphrase -->
-          <polyline fill="none" stroke="currentColor" stroke-dasharray="4,3" stroke-width="2" points="30,138 90,134 150,132 210,130 270,125 330,121"/>
-          <!-- R refusal -->
-          <polyline fill="none" stroke="var(--accent)" stroke-width="2" points="30,118 90,120 150,121 210,123 270,124 330,125"/>
-        </svg>
-        <div class="mt-2 text-xs text-slate-500">Solid: <span class="font-mono">U</span> (target); Dashed: <span class="font-mono">C</span>; Accent: <span class="font-mono">R</span>.</div>
-      </div>
-    </div>
-  </div>
-</div>
-      </section>
-
-      <section id="artifacts" class="py-6 md:py-10 border-y border-slate-200/60 dark:border-slate-800/60">
+ <!-- <section id="artifacts" class="py-6 md:py-10 border-y border-slate-200/60 dark:border-slate-800/60">
         <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-8 items-center">
           <div>
             <h2 class="text-xl md:text-2xl font-semibold">Artifacts</h2>
             <p class="mt-2 text-slate-600 dark:text-slate-300">Grab the paper and code, and see how to reproduce key plots.</p>
             <div id="get-paper" class="mt-5 flex flex-wrap gap-3">
-              <a href="#" data-href="paper" class="cta inline-flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-2 text-white hover:opacity-90 shadow-soft">📄 <span>Download PDF</span></a>
-              <a href="#" data-href="repo" class="cta inline-flex items-center gap-2 rounded-xl border border-slate-200/60 dark:border-slate-800/60 px-4 py-2 hover:shadow-soft">💾 <span>Open repository</span></a>
+              <a href="https://arxiv.org/abs/2510.16629" data-href="paper" class="cta inline-flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-2 text-white hover:opacity-90 shadow-soft">📄 <span>Download PDF</span></a>
+              <a href="https://github.com/princeton-pli/impossibility-unlearning" data-href="repo" class="cta inline-flex items-center gap-2 rounded-xl border border-slate-200/60 dark:border-slate-800/60 px-4 py-2 hover:shadow-soft">💾 <span>Open repository</span></a>
             </div>
             <ul class="mt-4 text-sm list-disc list-inside text-slate-700 dark:text-slate-200">
               <li>Repro notes and ethics guidance in <code class="font-mono">docs/</code> of the repo.</li>
@@ -403,7 +338,7 @@
             </svg>
           </div>
         </div>
-      </section>
+      </section> -->
 
       <section id="bibtex" class="py-6 md:py-10">
         <div class="max-w-6xl mx-auto px-4">
@@ -416,9 +351,8 @@
             <pre class="mt-2 text-xs overflow-auto"><code id="bibtex-code">@article{yu2025impossibility,
   title={On the Impossibility of Retrain Equivalence in Machine Unlearning},
   author={Yu, Jiatong and He, Yinghui and Goyal, Anirudh and Arora, Sanjeev},
-  journal={Preprint},
-  year={2025},
-  note={Code and materials: REPO_URL}
+  journal={arXiv preprint arXiv:2510.16629,
+  year={2025}
 }</code></pre>
           </div>
         </div>
@@ -453,10 +387,10 @@
       });
 
       // Theme toggle
-      document.getElementById('theme-toggle').addEventListener('click', () => {
-        document.documentElement.classList.toggle('dark');
-        localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-      });
+      // document.getElementById('theme-toggle').addEventListener('click', () => {
+      //   document.documentElement.classList.toggle('dark');
+      //   localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+      // });
 
       // Copy BibTeX
       document.getElementById('copy-bib').addEventListener('click', async () => {

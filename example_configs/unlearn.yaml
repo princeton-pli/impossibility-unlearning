@@ -1,10 +1,96 @@
-# Unlearning config
-algorithm: GA   # GA | NPO | SimNPO
-steps: 10
-learning_rate: 1e-5
-beta: 2.0         # for NPO/SimNPO
-reference_model_path: null  # for NPO; optional
-track_metrics:
-  - forget_score
-  - tofu_utility
-  - gsm8k_accuracy
+########################################################
+output_dir: ./models/unlearn_p=2_Llama1B_npo
+model_path: ./models/train_p=2_Llama1B/epoch_0
+########################################################
+
+tokenizer:
+  _component_: torchtune.models.llama3.llama3_tokenizer
+  path: ${model_path}/original/tokenizer.model
+  max_seq_len: null
+
+model:
+  _component_: torchtune.models.llama3_2.lora_llama3_2_1b
+  lora_attn_modules: ['q_proj', 'v_proj', 'output_proj']
+  apply_lora_to_mlp: True
+  lora_rank: 64 
+  lora_alpha: 128  
+  lora_dropout: 0.0
+
+checkpointer:
+  _component_: torchtune.training.FullModelHFCheckpointer
+  checkpoint_dir: ${model_path}
+  checkpoint_files:  [model-00001-of-00001.safetensors]
+  recipe_checkpoint: null
+  output_dir: ${output_dir}
+  model_type: LLAMA3_2
+resume_from_checkpoint: False
+save_adapter_weights_only: False
+
+loss:
+  _component_: torchtune.modules.loss.NPOWithChunkedOutputLoss
+loss_type: npo
+
+
+dataset:
+  _component_: torchtune.datasets.chat_dataset
+  conversation_column: conversations
+  conversation_style: openai
+  packed: False
+  source: json
+  data_files: data/safety_finetuning_dataset.json
+
+########################################################
+seed: 42
+batch_size: 2
+epochs: 1
+gradient_accumulation_steps: 80
+save_every_n_epochs: 1
+log_every_n_steps: 2
+max_new_tokens: 1024
+
+eval_data_path: None
+
+optimizer:
+  _component_: torch.optim.AdamW
+  fused: True
+  weight_decay: 0.00
+  lr: 1e-5
+
+lr_scheduler:
+  _component_: torchtune.training.lr_schedulers.get_wsd
+  num_warmup_steps: 5
+
+loss:
+  _component_: torchtune.modules.loss.NegCEWithChunkedOutputLoss
+########################################################
+
+shuffle: True
+  
+max_steps_per_epoch: null
+clip_grad_norm: null
+compile: False
+
+evaluation:
+  tofu: data/TOFU_full_chat.json
+
+  safety_id: data/safety_finetuning_dataset_id.json
+
+  safety_ood: data/safety_finetuning_dataset_ood.json
+
+  math_id: data/gsm8k-gpt4o-train.json
+
+  math_ood: data/gsm8k-gpt4o-train.json
+
+  batch_size: 16
+
+# Logging
+metric_logger:
+  _component_: torchtune.training.metric_logging.WandBLogger
+  project: impossibility-of-retrain-equivalence
+  log_dir: ./wandb
+
+# Environment
+device: cuda
+dtype: fp32
+enable_activation_checkpointing: False  # True reduces memory
+enable_activation_offloading: False  # True reduces memory

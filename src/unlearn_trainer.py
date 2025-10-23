@@ -109,7 +109,6 @@ def get_batch_log_probs(
     else:
         return (per_token_log_probs * loss_mask).sum(-1)
 
-
 class LoRAFinetuneRecipeDistributed(FTRecipeInterface):
 
     def __init__(self, cfg: DictConfig) -> None:
@@ -137,6 +136,18 @@ class LoRAFinetuneRecipeDistributed(FTRecipeInterface):
             mesh_dim_names=("dp", "tp"),
         )
         self._tp_mesh = self._world_mesh["tp"]
+
+        # Process groups for the named mesh dims
+        try:
+            self._tp_pg = self._tp_mesh.get_group()
+            self._dp_pg = self._world_mesh["dp"].get_group()
+        except AttributeError:
+            # Fallback for older PT versions: build groups from mesh ranks
+            tp_ranks = list(self._tp_mesh.mesh.flatten())
+            dp_ranks = list(self._world_mesh["dp"].mesh.flatten())
+            self._tp_pg = torch.distributed.new_group(ranks=tp_ranks)
+            self._dp_pg = torch.distributed.new_group(ranks=dp_ranks)
+
 
 
         self._is_rank_zero = self.rank == 0
@@ -842,12 +853,12 @@ class LoRAFinetuneRecipeDistributed(FTRecipeInterface):
         accum_tokens = torch.tensor(0.0, device=self._device)  # tokens for throughput metric
         have_policy_term = self._loss_type in ("npo", "simnpo")
         self._profiler.start()
-
-        init_metrics = self.callback(0)
-        if self._is_rank_zero:
-            base = {"loss": 0, "lr": 0}
-            base.update(init_metrics)
-            self._metric_logger.log_dict(base, step=0)
+        if self._log_every_n_steps < 100: #100 is our threshold for not logging
+            init_metrics = self.callback(0)
+            if self._is_rank_zero:
+                base = {"loss": 0, "lr": 0}
+                base.update(init_metrics)
+                self._metric_logger.log_dict(base, step=0)
 
         # TRAINING LOOP
         for curr_epoch in range(self.epochs_run, self.total_epochs):
@@ -864,6 +875,16 @@ class LoRAFinetuneRecipeDistributed(FTRecipeInterface):
                 if have_policy_term:
                     running_policy += stats["policy_term"]
                 loss.backward()
+
+                if self._tp_size > 1:
+                    for name, p in self._model.named_parameters():
+                        if p.grad is None:
+                            continue
+                        # If parameter isn't DTensor-sharded on TP, treat it as replicated and sync.
+                        spec = getattr(p, "_dtensor_spec", None)
+                        if not spec or spec.placements[spec.mesh.dim_names.index("tp")].is_replicate():
+                            torch.distributed.all_reduce(p.grad, group=self._tp_pg)
+                            p.grad.mul_(1.0 / self._tp_size)
 
                 if (idx + 1) % self._gradient_accumulation_steps == 0:
                     torch.distributed.all_reduce(accum_units)
@@ -927,9 +948,10 @@ class LoRAFinetuneRecipeDistributed(FTRecipeInterface):
             if (curr_epoch + 1) % self._save_every_n_epochs == 0 or curr_epoch == self.total_epochs - 1:
                 self.save_checkpoint(epoch=curr_epoch)
 
-        cb = self.callback(self.global_step)
-        if self._is_rank_zero:
-            self._metric_logger.log_dict(cb, step=self.global_step)
+        if self._log_every_n_steps < 100:
+            cb = self.callback(self.global_step)
+            if self._is_rank_zero:
+                self._metric_logger.log_dict(cb, step=self.global_step)
         self._profiler.stop()
 
     def save_checkpoint(
@@ -1034,6 +1056,7 @@ class LoRAFinetuneRecipeDistributed(FTRecipeInterface):
         if self._is_rank_zero:
             self._metric_logger.close()
         destroy_process_group()
+
 
 @config.parse
 def recipe_main(cfg: DictConfig) -> None:
